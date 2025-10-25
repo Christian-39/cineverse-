@@ -1,0 +1,1193 @@
+/* Basic Resets & Global Styles */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+:root {
+    --primary-color: #e50914;
+    /* Netflix Red */
+    --secondary-color: #f5f5f5;
+    /* Light Gray */
+    --dark-bg: #141414;
+    /* Dark Background */
+    --light-bg: #1f1f1f;
+    /* Slightly lighter dark for cards */
+    --text-color: #e0e0e0;
+    /* Light text */
+    --text-light: #b3b3b3;
+    /* Lighter text for descriptions */
+    --accent-color: #007bff;
+    /* Blue for highlights (e.g., hover) */
+    --border-color: #333;
+    --star-color: #ffc107;
+    /* Yellow for stars */
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--dark-bg);
+    color: var(--text-color);
+    line-height: 1.6;
+    scroll-behavior: smooth;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+a {
+    color: var(--text-color);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: var(--primary-color);
+}
+
+ul {
+    list-style: none;
+}
+
+/* --- Utility Classes --- */
+.btn {
+    display: inline-block;
+    padding: 12px 25px;
+    border-radius: 5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #ff202b;
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.btn-secondary:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+}
+
+.btn-outline {
+    background: transparent;
+    color: var(--primary-color);
+    border: 2px solid var(--primary-color);
+    padding: 10px 20px;
+    font-size: 0.9rem;
+}
+
+.btn-outline:hover {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.icon-btn {
+    background: none;
+    border: none;
+    color: var(--text-color);
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.icon-btn:hover {
+    color: var(--primary-color);
+}
+
+
+/* --- Navbar --- */
+.navbar {
+    background-color: rgba(20, 20, 20, 0.95);
+    /* Slightly transparent for hero section */
+    padding: 15px 0;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.navbar .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    letter-spacing: -0.5px;
+}
+
+.navbar nav ul {
+    display: flex;
+}
+
+.navbar nav ul li {
+    margin-left: 30px;
+}
+
+.navbar nav ul li .nav-link {
+    font-weight: 400;
+    padding: 5px 0;
+    position: relative;
+}
+
+.navbar nav ul li .nav-link.active,
+.navbar nav ul li .nav-link:hover {
+    color: var(--secondary-color);
+}
+
+.navbar nav ul li .nav-link.active::after,
+.navbar nav ul li .nav-link:hover::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: var(--primary-color);
+}
+
+/* --- Hero Section --- */
+.hero-section {
+    position: relative;
+    height: 100vh;
+    /* Adjust height as needed */
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding-top: 80px;
+    /* Space for fixed navbar */
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to right, rgba(20, 20, 20, 0.8) 0%, rgba(20, 20, 20, 0.6) 50%, rgba(20, 20, 20, 0) 100%);
+}
+
+.hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 600px;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+}
+
+.hero-title {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+    line-height: 1.1;
+}
+
+.hero-description {
+    font-size: 1.1rem;
+    color: var(--text-light);
+    margin-bottom: 30px;
+    max-width: 500px;
+}
+
+.hero-actions .btn {
+    margin-right: 15px;
+    font-size: 1.05rem;
+}
+
+.hero-actions .btn i {
+    margin-right: 8px;
+}
+
+
+/* --- Search Bar Section --- */
+.search-bar-section {
+    background-color: var(--dark-bg);
+    padding: 40px 0;
+    text-align: center;
+    position: relative;
+    z-index: 50;
+    /* Ensure it sits above other content if hero is sticky */
+    margin-top: -50px;
+    /* Overlap with hero for a smoother transition */
+}
+
+#search-form {
+    display: flex;
+    max-width: 700px;
+    margin: 0 auto;
+    border-radius: 50px;
+    overflow: hidden;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
+    background-color: var(--light-bg);
+    border: 1px solid var(--border-color);
+}
+
+#search-input {
+    flex-grow: 1;
+    padding: 15px 25px;
+    border: none;
+    background: transparent;
+    font-size: 1.1rem;
+    color: var(--text-color);
+    outline: none;
+}
+
+#search-input::placeholder {
+    color: var(--text-light);
+}
+
+#search-button {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 15px 25px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: background-color 0.3s ease;
+}
+
+#search-button:hover {
+    background-color: #ff202b;
+}
+
+/* --- Movie Listings Section --- */
+.movie-listings {
+    padding: 60px 0;
+    background-color: var(--dark-bg);
+}
+
+.movie-listings h2 {
+    font-size: 2.2rem;
+    margin-bottom: 30px;
+    text-align: center;
+    color: var(--secondary-color);
+}
+
+.movie-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 30px;
+    justify-content: center;
+    /* Center items if not enough to fill a row */
+}
+
+.movie-card {
+    background-color: var(--light-bg);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+}
+
+.movie-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+}
+
+.poster-container {
+    position: relative;
+    width: 100%;
+    padding-bottom: 150%;
+    /* Aspect ratio for common movie posters (2:3) */
+    overflow: hidden;
+    background-color: #333;
+    /* Placeholder background */
+}
+
+.movie-poster {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.3s ease;
+}
+
+.movie-card:hover .movie-poster {
+    transform: scale(1.05);
+}
+
+.movie-card .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.movie-card:hover .overlay {
+    opacity: 1;
+}
+
+.overlay-btn {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    font-size: 1.8rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.overlay-btn:hover {
+    background-color: #ff202b;
+    transform: scale(1.1);
+}
+
+.overlay-btn.add-btn {
+    background-color: rgba(255, 255, 255, 0.2);
+    font-size: 1.5rem;
+}
+
+.overlay-btn.add-btn:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+.movie-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    padding: 15px 10px 5px;
+    text-align: center;
+    color: var(--secondary-color);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.movie-rating {
+    font-size: 0.95rem;
+    color: var(--text-light);
+    text-align: center;
+    padding-bottom: 15px;
+}
+
+.movie-rating i {
+    color: var(--star-color);
+    margin-right: 5px;
+}
+
+.movie-listings>.container>.btn-outline {
+    display: block;
+    margin: 40px auto 0;
+    width: fit-content;
+    font-size: 1.1rem;
+}
+
+/* style.css (Additions for Movie Year) */
+
+.movie-year {
+    font-size: 0.85rem;
+    color: var(--text-light);
+    /* Muted color */
+    text-align: center;
+    margin-top: -5px;
+    /* Pull it closer to the title */
+    margin-bottom: 5px;
+    /* Space it from the rating */
+    font-weight: 300;
+}
+
+/* Update the rating to reduce padding since the year is now above it */
+.movie-rating {
+    /* Keep existing styles */
+    font-size: 0.95rem;
+    color: var(--text-light);
+    text-align: center;
+    padding-bottom: 15px;
+    /* Use existing padding or adjust as needed */
+    /* Remove or reduce any top padding you might have added previously */
+}
+
+/* style.css (Additions for Genre Tags) */
+
+.genre-container {
+    text-align: center;
+    padding: 5px 10px 10px;
+    /* Padding for spacing */
+    min-height: 40px;
+    /* Ensure consistent height for all cards */
+}
+
+.genre-tag {
+    display: inline-block;
+    background-color: var(--primary-color);
+    /* Use the accent red */
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 500;
+    padding: 3px 8px;
+    border-radius: 4px;
+    margin: 2px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+/* Optional: Adjust spacing if it looks crowded */
+.movie-rating {
+    /* Keep existing styles */
+    padding-bottom: 10px;
+    /* Slightly less padding now that genre is above it */
+}
+
+/* --- Placeholder Section --- */
+.placeholder-section {
+    padding: 60px 0;
+    background-color: var(--light-bg);
+    text-align: center;
+    border-top: 1px solid var(--border-color);
+}
+
+.placeholder-section h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: var(--primary-color);
+}
+
+.placeholder-section p {
+    color: var(--text-light);
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+/* --- Footer --- */
+footer {
+    background-color: var(--light-bg);
+    color: var(--text-light);
+    padding: 40px 0;
+    text-align: center;
+    border-top: 1px solid var(--border-color);
+}
+
+footer .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+footer p {
+    margin-bottom: 20px;
+    font-size: 0.9rem;
+}
+
+.social-links a {
+    color: var(--text-light);
+    font-size: 1.5rem;
+    margin: 0 10px;
+}
+
+.social-links a:hover {
+    color: var(--primary-color);
+}
+
+/* --- Responsive Design --- */
+@media (max-width: 768px) {
+    .navbar .container {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .navbar .logo {
+        width: 100%;
+        text-align: center;
+        margin-bottom: 15px;
+    }
+
+    .navbar nav ul {
+        flex-grow: 1;
+        justify-content: center;
+        margin-bottom: 15px;
+    }
+
+    .navbar nav ul li {
+        margin: 0 10px;
+    }
+
+    .user-actions {
+        width: 100%;
+        text-align: center;
+    }
+
+    .hero-section {
+        height: 60vh;
+    }
+
+    .hero-title {
+        font-size: 2.5rem;
+    }
+
+    .hero-description {
+        font-size: 1rem;
+    }
+
+    .hero-actions .btn {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+        margin-right: 10px;
+    }
+
+    .search-box {
+        border-radius: 10px;
+        /* Less rounded on small screens */
+    }
+
+    .search-input {
+        padding: 12px 15px;
+        font-size: 1rem;
+    }
+
+    .search-button {
+        padding: 12px 18px;
+        font-size: 1rem;
+    }
+
+    .movie-grid {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 20px;
+    }
+
+    .movie-card:hover {
+        transform: none;
+        /* Disable hover transform on touch devices */
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .movie-card .overlay {
+        opacity: 1;
+        /* Keep overlay visible on touch if play/add is important */
+        background-color: rgba(0, 0, 0, 0.5);
+        /* Lighter overlay */
+    }
+
+    .overlay-btn {
+        width: 50px;
+        height: 50px;
+        font-size: 1.5rem;
+    }
+
+    .movie-title {
+        font-size: 1rem;
+        padding: 10px 5px 5px;
+    }
+
+    .movie-rating {
+        font-size: 0.85rem;
+        padding-bottom: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-title {
+        font-size: 2rem;
+    }
+
+    .hero-description {
+        font-size: 0.9rem;
+    }
+
+    .hero-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .hero-actions .btn {
+        margin-right: 0;
+        width: 100%;
+    }
+
+    .movie-grid {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 15px;
+    }
+}
+
+
+/* style.css */
+
+/* -------------------------------------- */
+/* --- HAMBURGER MENU STYLES --- */
+/* -------------------------------------- */
+
+/* Hide the button by default (desktop view) */
+.hamburger-menu {
+    display: none;
+    background: none;
+    border: none;
+    color: var(--secondary-color);
+    font-size: 1.8rem;
+    cursor: pointer;
+    z-index: 1010;
+    /* Make sure it's above the navigation */
+    padding: 5px;
+}
+
+/* -------------------------------------- */
+/* --- MOBILE NAVIGATION STYLES --- */
+/* -------------------------------------- */
+
+/* Mobile-specific styles applied via Media Query (768px and below) */
+@media (max-width: 768px) {
+
+    /* 1. Show the hamburger menu button */
+    .hamburger-menu {
+        display: block;
+    }
+
+    /* 2. Style the main header to align items better on mobile */
+    .navbar .container {
+        /* Revert the wrapping to a simple row for logo and button */
+        flex-wrap: nowrap;
+        justify-content: space-between;
+    }
+
+    /* Hide the default navigation links on mobile */
+    .main-nav {
+        /* Takes up the full screen width and is positioned below the header */
+        position: absolute;
+        top: 70px;
+        /* Adjust based on your navbar height */
+        left: 0;
+        width: 100%;
+        height: 0;
+        /* Initially collapsed height */
+        overflow: hidden;
+        /* Hide the content when collapsed */
+        background-color: var(--dark-bg);
+        transition: height 0.3s ease, padding 0.3s ease;
+        z-index: 999;
+        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Style the list vertically for mobile */
+    .main-nav ul {
+        flex-direction: column;
+        padding: 20px 0;
+    }
+
+    .main-nav ul li {
+        margin: 0;
+        text-align: center;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .main-nav ul li:last-child {
+        border-bottom: none;
+    }
+
+    .main-nav ul li .nav-link {
+        display: block;
+        padding: 15px 0;
+        font-size: 1.1rem;
+        transition: background-color 0.2s;
+    }
+
+    .main-nav ul li .nav-link:hover {
+        background-color: var(--light-bg);
+    }
+
+    /* State when the menu is active/open (JS will add this class) */
+    .main-nav.active {
+        height: 270px;
+        /* Calculate/estimate the height needed to show all links */
+        padding-bottom: 20px;
+    }
+
+    /* Hide the user icon until the menu is open, or place it elsewhere */
+    .user-actions {
+        display: none;
+    }
+}
+
+/* style.css (Additions for Video Modal) */
+
+/* Modal Backdrop */
+.modal {
+    display: none;
+    /* Hidden by default */
+    position: fixed;
+    z-index: 10000;
+    /* Must be higher than everything else */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.9);
+    /* Dark semi-transparent background */
+}
+
+/* Modal Content Box (Holds the video) */
+.modal-content {
+    background-color: var(--dark-bg);
+    margin: 10% auto;
+    /* 10% from the top and centered */
+    padding: 20px;
+    width: 90%;
+    max-width: 900px;
+    position: relative;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.8);
+}
+
+/* Close Button (X) */
+.close-btn {
+    color: #fff;
+    font-size: 30px;
+    font-weight: bold;
+    position: absolute;
+    top: 5px;
+    right: 15px;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+.close-btn:hover,
+.close-btn:focus {
+    opacity: 1;
+}
+
+/* Video Player Container (maintains 16:9 aspect ratio) */
+#video-player {
+    position: relative;
+    padding-bottom: 56.25%;
+    /* 16:9 Aspect Ratio (9 / 16 * 100) */
+    height: 0;
+    overflow: hidden;
+    margin-top: 30px;
+}
+
+#video-player iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+
+/* style.css (Additions for Paginator) */
+
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 30px 20px;
+    gap: 15px;
+}
+
+.page-btn,
+.page-number-btn {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.2s, opacity 0.2s;
+}
+
+.page-btn:hover:not(:disabled),
+.page-number-btn:hover:not(.active) {
+    background-color: var(--primary-color-dark);
+}
+
+.page-btn:disabled {
+    background-color: var(--light-bg);
+    color: var(--text-light);
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.page-numbers {
+    display: flex;
+    gap: 8px;
+}
+
+.page-number-btn {
+    background-color: var(--light-bg);
+    color: var(--text-dark);
+    min-width: 40px;
+    padding: 10px 0;
+}
+
+.page-number-btn.active {
+    background-color: var(--secondary-color);
+    /* Highlight the current page */
+    color: white;
+    pointer-events: none;
+    /* Make the active button unclickable */
+}
+
+
+
+
+
+
+/* style.css (Movie Details Page) */
+
+.details-page-main {
+    padding-top: 70px;
+    /* Adjust based on your fixed navbar height */
+    background-color: var(--dark-bg);
+    min-height: calc(100vh - 70px);
+    color: var(--text-light);
+}
+
+.movie-detail-section {
+    position: relative;
+    padding: 50px 0;
+    overflow: hidden;
+}
+
+.movie-detail-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    filter: brightness(0.25) blur(20px);
+    /* Blurry background effect */
+    transform: scale(1.05);
+    /* To hide blur edges */
+    z-index: 1;
+}
+
+.backdrop-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to top, var(--dark-bg) 15%, rgba(0, 0, 0, 0.6) 80%, transparent 100%);
+    /* Gradient over blur */
+    z-index: 2;
+}
+
+.movie-detail-content {
+    position: relative;
+    display: flex;
+    gap: 40px;
+    z-index: 3;
+    align-items: flex-start;
+}
+
+.poster-column {
+    flex-shrink: 0;
+    /* Don't allow poster to shrink */
+    width: 300px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.detail-poster {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 10px;
+}
+
+.info-column {
+    flex-grow: 1;
+}
+
+.detail-title {
+    font-size: 2.8rem;
+    color: var(--primary-color);
+    margin-bottom: 10px;
+    line-height: 1.2;
+}
+
+.detail-tagline {
+    font-style: italic;
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    margin-bottom: 25px;
+}
+
+.meta-info {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px 25px;
+    margin-bottom: 30px;
+    font-size: 0.95rem;
+    color: var(--text-light);
+}
+
+.meta-item i {
+    color: var(--secondary-color);
+    margin-right: 8px;
+}
+
+.detail-overview {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 40px;
+    max-width: 800px;
+}
+
+.cast-info {
+    margin-bottom: 40px;
+}
+
+.cast-info h3 {
+    font-size: 1.5rem;
+    color: var(--secondary-color);
+    margin-bottom: 20px;
+}
+
+.cast-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.cast-member {
+    text-align: center;
+    width: 100px;
+    /* Fixed width for cast photos */
+}
+
+.cast-member img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid var(--primary-color);
+    margin-bottom: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.cast-member p {
+    font-size: 0.85rem;
+    color: var(--text-light);
+    line-height: 1.3;
+}
+
+.cast-member .character {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.detail-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.detail-actions .btn-primary,
+.detail-actions .btn-secondary {
+    padding: 12px 25px;
+    font-size: 1rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+    .movie-detail-content {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .poster-column {
+        width: 250px;
+        margin-bottom: 30px;
+    }
+
+    .detail-title {
+        font-size: 2.2rem;
+    }
+
+    .meta-info {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 768px) {
+    .details-page-main {
+        padding-top: 60px;
+        /* Adjust for smaller navbar if needed */
+    }
+
+    .movie-detail-content {
+        gap: 20px;
+    }
+
+    .poster-column {
+        width: 200px;
+    }
+
+    .detail-title {
+        font-size: 1.8rem;
+    }
+
+    .detail-overview {
+        font-size: 1rem;
+    }
+
+    .cast-member {
+        width: 80px;
+    }
+
+    .cast-member img {
+        width: 60px;
+        height: 60px;
+    }
+
+    .detail-actions {
+        justify-content: center;
+    }
+}
+
+/* style.css (Additions for the Back Button) */
+
+.back-btn {
+    margin-top: 20px;
+    /* Space it out from the navbar */
+    margin-bottom: 20px;
+    background-color: transparent;
+    border: 1px solid var(--secondary-color);
+    color: var(--secondary-color);
+    transition: background-color 0.2s, color 0.2s;
+    padding: 8px 15px;
+    font-size: 0.9rem;
+}
+
+.back-btn:hover {
+    background-color: var(--secondary-color);
+    color: var(--dark-bg);
+}
+
+.back-btn i {
+    margin-right: 8px;
+}
+
+.add-btn.added {
+    background-color: var(--primary-color);
+    /* Use your primary color */
+    color: var(--text-light);
+    border-color: var(--primary-color);
+    font-size: 12px;
+}
+
+.add-btn.added:hover {
+    background-color: var(--primary-color-darker);
+
+    /* Darker shade on hover */
+}
+
+/* Ensure the standard grid is responsive and sets a default max width */
+.movie-list-container {
+    display: grid;
+    /* This defines how wide cards *can* be on the main page */
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+    padding: 20px 0;
+}
+
+/* ----------------------------------------------------------------- */
+/* *** TARGETED WATCHLIST STYLES *** */
+/* ----------------------------------------------------------------- */
+
+#watchlist-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+#watchlist-grid .movie-card {
+    max-width: 100%;
+}
+
+#watchlist-grid .movie-card .movie-poster {
+    width: 100%;
+    height: auto;
+}
+
+#watchlist-grid .movie-title {
+    font-size: 1rem;
+}
+
+#watchlist-grid .movie-year,
+#watchlist-grid .movie-rating {
+    font-size: 0.85rem;
+}
+
+/* style.css (New Section for Category Filter) */
+
+.category-filter {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 30px;
+    padding-bottom: 5px;
+    border-bottom: 2px solid var(--text-muted);
+}
+
+.filter-btn {
+    background-color: transparent;
+    color: var(--text-light);
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s ease;
+}
+
+.filter-btn:hover {
+    color: var(--primary-color);
+}
+
+.filter-btn.active {
+    color: var(--primary-color);
+    border-bottom: 3px solid var(--primary-color);
+    font-weight: bold;
+}
+
+#explore-movies {
+    margin-top: 40px;
+}
