@@ -18,7 +18,7 @@
                 <ul>
                     <li><a href="gemini.html" class="nav-link active">Home</a></li>
                     <li><a href="movies.html" class="nav-link">Movies</a></li>
-                    <li><a href="#" class="nav-link">TV Shows</a></li>
+                    <li><a href="tv-shows.html" class="nav-link">TV Shows</a></li>
                     <li><a href="#" class="nav-link">Genres</a></li>
                     <li><a href="watchlist.html" class="nav-link">Watchlist</a></li>
                 </ul>
@@ -27,18 +27,17 @@
         </div>
     </header>
     <main>
-        <section class="hero-section"
+        <section class="hero-section hero-home"
             style="background-image: url('https://image.tmdb.org/t/p/original/rSPw7AP0V62bX1d20063s9Ue3m2.jpg');">
             <div class="hero-overlay"></div>
             <div class="container hero-content">
-                <h1 class="hero-title">Dune: Part Two</h1>
-                <p class="hero-description">Paul Atreides unites with Chani and the Fremen while seeking revenge against
-                    those who destroyed his family.</p>
-                <div class="hero-actions">
-                    <button class="btn btn-primary trailer-trigger" data-movie-id=""><i class="fas fa-play"></i> Watch
-                        Trailer</button>
-                    <button class="btn btn-secondary"><i class="fas fa-plus"></i>Add to Watchlist</button>
-                </div>
+                <h1 class="hero-title" id="home-hero-title">Dune: Part Two</h1>
+                <p class="hero-description" id="home-hero-description">Paul Atreides unites with Chani and the Fremen
+                    while seeking revenge
+                    against those who destroyed his family.</p>
+                <div class="hero-actions"><button class="btn btn-primary trailer-trigger" id="home-hero-trailer-btn"
+                        data-movie-id=""><i class="fas fa-play"></i>Watch Trailer</button><button
+                        class="btn btn-secondary"><i class="fas fa-plus"></i>Add to Watchlist</button></div>
             </div>
         </section>
         <section class="search-bar-section">
@@ -104,21 +103,14 @@
                         <h3 class="movie-title">Anatomy of a Fall</h3>
                         <p class="movie-rating"><i class="fas fa-star"></i>7.6</p>
                     </div>
-
                 </div>
         </section>
         <div class="pagination-container"><button id="prev-page-btn" class="page-btn" disabled><i
-                    class="fas fa-chevron-left"></i>Previous</button>
-            <div id="page-numbers" class="page-numbers"></div><button id="next-page-btn" class="page-btn">Next <i
+                    class="fas fa-chevron-left"></i></button>
+            <div id="page-numbers" class="page-numbers"></div><button id="next-page-btn" class="page-btn"> <i
                     class="fas fa-chevron-right"></i></button>
         </div>
-        <section class="placeholder-section">
-            <div class="container">
-                <h2>Explore More</h2>
-                <p>This section could feature other categories,
-                    such as "Popular TV Shows"or "Browse by Genre."</p>
-            </div>
-        </section>
+
     </main>
     <footer>
         <div class="container">

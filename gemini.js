@@ -9,6 +9,11 @@ const YOUTUBE_BASE_URL = 'https://www.youtube.com/embed/';
 const WATCHLIST_STORAGE_KEY = 'cineverse_watchlist';
 
 // Endpoints
+const TV_SHOW_BASE_URL = `${TMDB_BASE_URL}/tv`;
+const POPULAR_TV_URL = `${TV_SHOW_BASE_URL}/popular`;
+const TOP_RATED_TV_URL = `${TV_SHOW_BASE_URL}/top_rated_tv`;
+const ON_THE_AIR_TV_URL = `${TV_SHOW_BASE_URL}/on_the_air`;
+const AIRING_TODAY_TV_URL = `${TV_SHOW_BASE_URL}/airing_today`;
 const POPULAR_MOVIES_URL = `${TMDB_BASE_URL}/movie/popular`;
 const NOW_PLAYING_URL = `${TMDB_BASE_URL}/movie/now_playing`;
 const SEARCH_MOVIE_URL = `${TMDB_BASE_URL}/search/movie`;
@@ -28,7 +33,7 @@ let watchlist = []; // This will be populated from local storage on init
 let currentSearchQuery = '';
 let currentPage = 1;
 let totalPages = 1;
-
+let currentMediaType = 'movie';
 let genreMap = {}
 
     ;
@@ -76,7 +81,8 @@ async function fetchMovies(url, page = 1, query = '') {
     }
 }
 
-async function fetchGenres() {
+async function fetchGenres(mediaType = 'movie') {
+    const GENRE_LIST_URL = `${TMDB_BASE_URL}/genre/${mediaType}/list`;
     try {
         const options = {
 
@@ -133,6 +139,22 @@ async function fetchMovieTrailer(movieId) {
     }
 }
 
+async function fetchHeroHomeMovie() {
+    try {
+        const topRatedMovies = await fetchMovies(TOP_RATED_MOVIES_URL);
+        if (topRatedMovies.length === 0) return null;
+
+        topRatedMovies.sort((a, b) => b.popularity - a.popularity);
+        return topRatedMovies[0];
+
+    }
+
+    catch (error) {
+        console.error("Could not fetch hero movie:", error);
+        return null;
+    }
+}
+
 async function fetchHeroMovie() {
     try {
         const nowPlaying = await fetchMovies(NOW_PLAYING_URL);
@@ -149,27 +171,42 @@ async function fetchHeroMovie() {
     }
 }
 
+async function fetchHeroTVShow() {
+    try {
+        const topRatedTV = await fetchMovies(POPULAR_TV_URL); // Reusing fetchMovies
+        if (topRatedTV.length === 0) return null;
+
+        topRatedTV.sort((a, b) => b.popularity - a.popularity);
+        return topRatedTV[0];
+
+    } catch (error) {
+        console.error("Could not fetch hero TV show:", error);
+        return null;
+    }
+}
+
 // =================================================================
 // 3. RENDERING FUNCTIONS
 // =================================================================
 
-function createMovieCard(movie) {
-    const posterPath = movie.poster_path
-        ? `${IMAGE_BASE_URL}${POSTER_SIZE}${movie.poster_path}`
+function createMovieCard(item) {
+    const posterPath = item.poster_path
+        ? `${IMAGE_BASE_URL}${POSTER_SIZE}${item.poster_path}`
         : 'placeholder-image-url.jpg'; // Fallback
 
-    const title = movie.title;
-    const rating = movie.vote_average ? movie.vote_average.toFixed(1) : 'N/A';
-    const movieId = movie.id;
-    let releaseYear = movie.release_date ? movie.release_date.split('-')[0] : 'N/A';
+    const title = item.title || item.name;
+    const rating = item.vote_average ? item.vote_average.toFixed(1) : 'N/A';
+    const itemId = item.id;
+    const releaseYear = item.release_date || item.first_air_date;
+    let year = releaseYear ? String(releaseYear).split('-')[0] : 'N/A';
 
     // Genre Tag Logic
-    const genreIds = movie.genre_ids || [];
+    const genreIds = item.genre_ids || [];
     const genres = genreIds.slice(0, 2).map(id => genreMap[id]).filter(name => name);
-    const movieIdStr = String(movieId);
+    const itemIdStr = String(itemId);
 
-    // Check if the movie is currently in the watchlist
-    const isAdded = watchlist.includes(movieIdStr);
+    // Check if the item is currently in the watchlist
+    const isAdded = watchlist.includes(itemIdStr);
     const btnClass = isAdded ? 'added' : '';
     const btnIcon = isAdded ? 'fa-check' : 'fa-plus';
     const btnText = isAdded ? ' Added' : '';
@@ -178,12 +215,12 @@ function createMovieCard(movie) {
         ? genres.map(genre => `<span class="genre-tag">${genre}</span>`).join('')
         : '<span class="genre-tag">N/A</span>';
 
-    return ` <div class="movie-card" data-movie-id="${movieId}">
+    return ` <div class="movie-card" data-movie-id="${itemId}">
     <div class="poster-container">
     <img src="${posterPath}"alt="${title} Poster" class="movie-poster">
     <div class="overlay">
-    <button class="overlay-btn play-btn list-trailer-btn" data-movie-id="${movieId}"><i class="fas fa-play"></i></button>
-    <button class="overlay-btn add-btn ${btnClass}" data-id="${movieIdStr}">
+    <button class="overlay-btn play-btn list-trailer-btn" data-movie-id="${itemId}"><i class="fas fa-play"></i></button>
+    <button class="overlay-btn add-btn ${btnClass}" data-id="${itemIdStr}">
                         <i class="fas ${btnIcon}"></i>${btnText}
                     </button>
     </div>
@@ -221,33 +258,32 @@ function renderMovies(movies) {
     );
 }
 
-function renderHeroSection(movie) {
-    if (!movie) return;
+function renderHeroSection(item, heroSectionId, titleId, descriptionId, trailerBtnId) {
+    if (!item) return;
 
-    const heroSection = document.querySelector('.hero-section');
-    const heroTitle = document.querySelector('.hero-title');
-    const heroDescription = document.querySelector('.hero-description');
-    const watchTrailerBtn = document.querySelector('.trailer-trigger');
+    const heroSection = document.querySelector(heroSectionId);
+    const heroTitle = document.getElementById(titleId);
+    const heroDescription = document.getElementById(descriptionId);
+    const watchTrailerBtn = document.getElementById(trailerBtnId);
 
-    // 1. Set Background
-    const backdropPath = movie.backdrop_path ? `${IMAGE_BASE_URL}${BACKDROP_SIZE}${movie.backdrop_path}` : '';
-
+    // 1. Set Background (item.backdrop_path is common to both movies/tv)
+    const backdropPath = item.backdrop_path ? `${IMAGE_BASE_URL}${BACKDROP_SIZE}${item.backdrop_path}` : '';
     if (heroSection && backdropPath) {
         heroSection.style.backgroundImage = `url('${backdropPath}')`;
     }
 
-    // 2. Set Text
-    if (heroTitle) heroTitle.textContent = movie.title || 'Movie Title Not Found';
-
+    // 2. Set Text (use 'title' for movies, 'name' for TV)
+    if (heroTitle) heroTitle.textContent = item.title || item.name || 'Title Not Found';
     if (heroDescription) {
-        const synopsis = movie.overview && movie.overview.length > 200 ? movie.overview.substring(0, 200) + '...'
-            : movie.overview;
+        const synopsis = item.overview && item.overview.length > 200
+            ? item.overview.substring(0, 200) + '...'
+            : item.overview;
         heroDescription.textContent = synopsis || 'No synopsis available.';
     }
 
     // 3. Set Trailer ID
     if (watchTrailerBtn) {
-        watchTrailerBtn.dataset.movieId = movie.id;
+        watchTrailerBtn.dataset.movieId = item.id;
     }
 }
 
@@ -481,6 +517,45 @@ async function init() {
     }
 }
 
+async function initHomeMoviesPageHero() {
+    const featuredHomeMovie = await fetchHeroHomeMovie(); // Reusing existing fetchHeroMovie
+    if (featuredHomeMovie) {
+        renderHeroSection(
+            featuredHomeMovie,
+            '.hero-section.hero-home', // Specific selector for movie hero
+            'home-hero-title',
+            'home-hero-description',
+            'home-hero-trailer-btn'
+        );
+    }
+}
+
+async function initMoviesPageHero() {
+    const featuredMovie = await fetchHeroMovie(); // Reusing existing fetchHeroMovie
+    if (featuredMovie) {
+        renderHeroSection(
+            featuredMovie,
+            '.hero-section.hero-movie', // Specific selector for movie hero
+            'movie-hero-title',
+            'movie-hero-description',
+            'movie-hero-trailer-btn'
+        );
+    }
+}
+
+async function initTVShowsPageHero() {
+    const featuredTVShow = await fetchHeroTVShow();
+    if (featuredTVShow) {
+        renderHeroSection(
+            featuredTVShow,
+            '.hero-section.hero-tv', // Specific selector for TV hero
+            'tv-hero-title',
+            'tv-hero-description',
+            'tv-hero-trailer-btn'
+        );
+    }
+}
+
 // =================================================================
 // 6. MAIN EXECUTION
 // =================================================================
@@ -504,43 +579,85 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     init();
     const path = window.location.pathname;
-    if (path.includes('gemini.html') || path === '/') {
-        init();
-    } else if (path.includes('movies.html')) {
-        initMoviesPage(); // New function call
-        setupCategoryFilter();
-    }
+    loadWatchlist();
 
-    // 2. Setup UI components
+    // General UI setups
     setupHamburgerMenu();
     setupVideoModal();
+    setupWatchlistListeners(); // For "Add to List" buttons
 
-    // 3. Setup interactive handlers
+    // Setup Search and Paginator (these are global and will adapt their targets)
     const searchForm = document.getElementById('search-form');
-
     if (searchForm) {
         searchForm.addEventListener('submit', handleSearch);
     }
-
     handlePaginatorClicks();
-    setupWatchlistListeners();
 
-    async function initMoviesPage() {
-        // 1. GENRES: Fetch and populate the Genre Map
-        await fetchGenres();
+    // Page-specific initializations
+    if (path.includes('gemini.html') || path === '/') {
+        initHomePage();
+        initHomeMoviesPageHero();
+    } else if (path.includes('movies.html')) {
+        initMoviesPageHero(); // NEW: Call hero for movies
+        initMoviesPageContent();
+        setupCategoryFilter();
+    } else if (path.includes('tv-shows.html')) {
+        initTVShowsPageHero(); // NEW: Call hero for TV shows
+        initTVShowsPageContent(); // NEW: Handles category & grid
+        setupCategoryFilter();
+    }
+});
 
-        // 2. MOVIE LISTS: Fetch and render the initial category (Popular)
-        currentApiUrl = POPULAR_MOVIES_URL; // Ensure default is popular
-        const popularMovies = await fetchMovies(currentApiUrl, currentPage);
+async function initHomePage() {
+    await fetchGenres(); // Default to 'movie' genres
+    currentMediaType = 'movie';
+    currentApiUrl = POPULAR_MOVIES_URL;
+    currentPage = 1;
 
-        if (popularMovies.length > 0) {
-            renderMovies(popularMovies);
-            renderPaginator();
-        }
+    const popularMovies = await fetchMovies(currentApiUrl, currentPage);
+    if (popularMovies.length > 0) {
+        renderMovies(popularMovies);
+        renderPaginator();
     }
 }
 
-);
+async function initMoviesPageContent() { // Renamed from initMoviesPage
+    currentMediaType = 'movie'; // Ensure global flag is correct
+    await fetchGenres(); // Default to 'movie' genres
+
+    // Ensure the explore title for movies is set
+    const exploreTitle = document.getElementById('movies-explore-title');
+    if (exploreTitle) exploreTitle.textContent = 'Popular Movies';
+
+    currentApiUrl = POPULAR_MOVIES_URL;
+    currentPage = 1;
+    const popularMovies = await fetchMovies(currentApiUrl, currentPage);
+    if (popularMovies.length > 0) {
+        renderMovies(popularMovies);
+        renderPaginator();
+    } else {
+        renderMovies([]);
+    }
+}
+
+async function initTVShowsPageContent() { // Renamed from initTVShowsPage
+    currentMediaType = 'tv'; // Set global flag to TV
+    await fetchGenres('tv');
+
+    // Ensure the explore title for TV Shows is set
+    const exploreTitle = document.getElementById('tv-shows-explore-title');
+    if (exploreTitle) exploreTitle.textContent = 'Popular TV Shows';
+
+    currentApiUrl = POPULAR_TV_URL;
+    currentPage = 1;
+    const popularShows = await fetchMovies(currentApiUrl, currentPage);
+    if (popularShows.length > 0) {
+        renderMovies(popularShows);
+        renderPaginator();
+    } else {
+        renderMovies([]);
+    }
+};
 
 function loadWatchlist() {
     // Retrieve the watchlist from local storage
@@ -578,12 +695,12 @@ function handleWatchlistClick(movieId) {
     if (index > -1) {
         // Movie is already in the list: REMOVE it
         watchlist.splice(index, 1);
-        alert(`Movie removed from Watchlist!`);
+        //alert(`Movie removed from Watchlist!`);
         isRemoval = true;
     } else {
         // Movie is NOT in the list: ADD it
         watchlist.push(movieIdStr);
-        alert(`Movie added to Watchlist!`);
+        //alert(`Movie added to Watchlist!`);
     }
 
     saveWatchlist();
@@ -639,21 +756,44 @@ function setupCategoryFilter() {
         // 2. Determine New API URL
         const apiSegment = btn.dataset.apiUrl; // e.g., 'top_rated'
         let newApiUrl;
+        // Define the base path (movie or tv)
+        const basePath = currentMediaType === 'tv' ? TV_SHOW_BASE_URL : TMDB_BASE_URL + '/movie';
+        newApiUrl = `${basePath}/${apiSegment}`;
+        if (currentMediaType === 'tv') {
 
-        switch (apiSegment) {
-            case 'top_rated':
-                newApiUrl = TOP_RATED_MOVIES_URL;
-                break;
-            case 'upcoming':
-                newApiUrl = UPCOMING_MOVIES_URL;
-                break;
-            case 'now_playing':
-                newApiUrl = NOW_PLAYING_URL;
-                break;
-            case 'popular':
-            default:
-                newApiUrl = POPULAR_MOVIES_URL;
-                break;
+            switch (apiSegment) {
+                case 'top_rated':
+                    newApiUrl = TOP_RATED_MOVIES_URL;
+                    break;
+                case 'upcoming':
+                    newApiUrl = UPCOMING_MOVIES_URL;
+                    break;
+                case 'now_playing':
+                    newApiUrl = NOW_PLAYING_URL;
+                    break;
+
+
+                case 'top_rated_tv':
+                    newApiUrl = TOP_RATED_TV_URL;
+                    break;
+                case 'on_the_air':
+                    newApiUrl = ON_THE_AIR_TV_URL;
+                    break;
+                case 'airing_today':
+                    newApiUrl = AIRING_TODAY_TV_URL;
+                    break;
+                case 'popular_tv':
+                    newApiUrl = POPULAR_TV_URL;
+                    break;
+                case 'popular':
+                default:
+                    newApiUrl = POPULAR_MOVIES_URL;
+                    break;
+            }
+        }
+        if (!newApiUrl) {
+            console.error("Failed to construct a valid API URL for segment:", apiSegment);
+            return;
         }
 
         // 3. Reset State and Fetch
@@ -673,4 +813,24 @@ function setupCategoryFilter() {
         // Scroll to top
         exploreTitle.scrollIntoView({ behavior: 'smooth' });
     });
+}
+
+async function initTVShowsPage() {
+    currentMediaType = 'tv'; // Set global flag to TV
+
+    // 1. GENRES: Fetch TV genres
+    await fetchGenres('tv');
+
+    // 2. Initial List: Set default URL to popular TV shows
+    currentApiUrl = POPULAR_TV_URL;
+    currentPage = 1;
+
+    // Fetch and render the initial category (Popular TV)
+    const popularShows = await fetchMovies(currentApiUrl, currentPage);
+
+    if (popularShows.length > 0) {
+        // The renderMovies function will use the new 'tv-shows-grid' ID if available
+        renderMovies(popularShows);
+        renderPaginator();
+    }
 }
